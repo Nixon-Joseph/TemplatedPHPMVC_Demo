@@ -4,9 +4,8 @@
  */
 
 //$start = microtime(true);
-
 require './vendor/autoload.php';
-//$app = new TemplateMVCApp("./app/cache");  // enable caching
+//$app = new devpirates\MVC\TemplateMVCApp("./app/cache");  // enable caching
 $app = new devpirates\MVC\TemplateMVCApp();
 
 $app->Autoload("./app/controllers", array("./app/models", "./app/helpers", "./app/repos"));

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ec38ca4484a94c02b657e1c91e0f942f",
+    "content-hash": "c972753e179fb6ffad9827f6b1e3e970",
     "packages": [
         {
             "name": "bshaffer/oauth2-server-php",
@@ -70,16 +70,16 @@
         },
         {
             "name": "devpirates/templated-php-mvc",
-            "version": "0.1.1",
+            "version": "0.1.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Nixon-Joseph/TemplatedPHPMVC.git",
-                "reference": "a1849241b9103d5d1bf6ec85d19709d15d15bdca"
+                "reference": "8059ee5f59da0536cc7c2725c56639a0a680dc62"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nixon-Joseph/TemplatedPHPMVC/zipball/a1849241b9103d5d1bf6ec85d19709d15d15bdca",
-                "reference": "a1849241b9103d5d1bf6ec85d19709d15d15bdca",
+                "url": "https://api.github.com/repos/Nixon-Joseph/TemplatedPHPMVC/zipball/8059ee5f59da0536cc7c2725c56639a0a680dc62",
+                "reference": "8059ee5f59da0536cc7c2725c56639a0a680dc62",
                 "shasum": ""
             },
             "require": {
@@ -90,6 +90,12 @@
                 "sonata-project/google-authenticator": "^2.3"
             },
             "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "devpirates\\MVC\\": "src/",
+                    "devpirates\\MVC\\Base\\": "src/abstract/"
+                }
+            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
@@ -101,15 +107,15 @@
                 },
                 {
                     "name": "Matt Nixon",
-                    "email": "davincreed@gmail.com"
+                    "email": "matt@devpirates.com"
                 }
             ],
             "description": "Library to help people quickly build and maintain an mvc project in php with lots of helpful built in tools and utilities",
             "support": {
                 "issues": "https://github.com/Nixon-Joseph/TemplatedPHPMVC/issues",
-                "source": "https://github.com/Nixon-Joseph/TemplatedPHPMVC/tree/0.1.1"
+                "source": "https://github.com/Nixon-Joseph/TemplatedPHPMVC/tree/0.1.8"
             },
-            "time": "2021-03-29T18:17:49+00:00"
+            "time": "2021-03-29T19:54:03+00:00"
         },
         {
             "name": "liquid/liquid",
