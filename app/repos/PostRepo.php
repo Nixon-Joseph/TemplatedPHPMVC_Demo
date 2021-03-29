@@ -1,5 +1,5 @@
 <?php
-class PostRepo extends Repo {
+class PostRepo extends devpirates\MVC\Base\Repo {
     public function __construct() {
         parent::__construct("Post");
     }

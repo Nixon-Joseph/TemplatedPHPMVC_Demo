@@ -1,5 +1,5 @@
 <?php
-class PostsController extends Controller {
+class PostsController extends \devpirates\MVC\Base\Controller {
     public function index() {
         header("location: /404/notfound/");
     }

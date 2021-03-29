@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c972753e179fb6ffad9827f6b1e3e970",
+    "content-hash": "ee413dcedd6fb4bbc742f1e44b5f120c",
     "packages": [
         {
             "name": "bshaffer/oauth2-server-php",
@@ -70,16 +70,16 @@
         },
         {
             "name": "devpirates/templated-php-mvc",
-            "version": "0.1.8",
+            "version": "0.1.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Nixon-Joseph/TemplatedPHPMVC.git",
-                "reference": "8059ee5f59da0536cc7c2725c56639a0a680dc62"
+                "reference": "d0f387dc2c56f4cb131afc5b34e719b92fa56ae6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nixon-Joseph/TemplatedPHPMVC/zipball/8059ee5f59da0536cc7c2725c56639a0a680dc62",
-                "reference": "8059ee5f59da0536cc7c2725c56639a0a680dc62",
+                "url": "https://api.github.com/repos/Nixon-Joseph/TemplatedPHPMVC/zipball/d0f387dc2c56f4cb131afc5b34e719b92fa56ae6",
+                "reference": "d0f387dc2c56f4cb131afc5b34e719b92fa56ae6",
                 "shasum": ""
             },
             "require": {
@@ -113,9 +113,9 @@
             "description": "Library to help people quickly build and maintain an mvc project in php with lots of helpful built in tools and utilities",
             "support": {
                 "issues": "https://github.com/Nixon-Joseph/TemplatedPHPMVC/issues",
-                "source": "https://github.com/Nixon-Joseph/TemplatedPHPMVC/tree/0.1.8"
+                "source": "https://github.com/Nixon-Joseph/TemplatedPHPMVC/tree/0.1.11"
             },
-            "time": "2021-03-29T19:54:03+00:00"
+            "time": "2021-03-29T21:07:07+00:00"
         },
         {
             "name": "liquid/liquid",
