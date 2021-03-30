@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0e9226024380faa29b5a116fa715a343",
+    "content-hash": "7addd8cc6f0dc244a10b2fe034473ddb",
     "packages": [
         {
             "name": "devpirates/templated-php-mvc",
