@@ -70,16 +70,16 @@
         },
         {
             "name": "devpirates/templated-php-mvc",
-            "version": "0.1.11",
+            "version": "0.1.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Nixon-Joseph/TemplatedPHPMVC.git",
-                "reference": "d0f387dc2c56f4cb131afc5b34e719b92fa56ae6"
+                "reference": "a3f4eb329459ddfee7e774294ed2602acdbecb0c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nixon-Joseph/TemplatedPHPMVC/zipball/d0f387dc2c56f4cb131afc5b34e719b92fa56ae6",
-                "reference": "d0f387dc2c56f4cb131afc5b34e719b92fa56ae6",
+                "url": "https://api.github.com/repos/Nixon-Joseph/TemplatedPHPMVC/zipball/a3f4eb329459ddfee7e774294ed2602acdbecb0c",
+                "reference": "a3f4eb329459ddfee7e774294ed2602acdbecb0c",
                 "shasum": ""
             },
             "require": {
@@ -113,9 +113,9 @@
             "description": "Library to help people quickly build and maintain an mvc project in php with lots of helpful built in tools and utilities",
             "support": {
                 "issues": "https://github.com/Nixon-Joseph/TemplatedPHPMVC/issues",
-                "source": "https://github.com/Nixon-Joseph/TemplatedPHPMVC/tree/0.1.11"
+                "source": "https://github.com/Nixon-Joseph/TemplatedPHPMVC/tree/0.1.13"
             },
-            "time": "2021-03-29T21:07:07+00:00"
+            "time": "2021-03-29T23:57:00+00:00"
         },
         {
             "name": "liquid/liquid",
