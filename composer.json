@@ -9,6 +9,6 @@
         }
     ],
     "require": {
-        "devpirates/templated-php-mvc": "^0.1.9"
+        "devpirates/templated-php-mvc": "^0.1.14"
     }
 }
