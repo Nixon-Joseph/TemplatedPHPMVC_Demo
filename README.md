@@ -5,7 +5,7 @@ To run this, simply clone or download. Install the dependencies via composer. (S
 You may need to set up a virtual host for routing to work properly. Mine looks like this in ubuntu. If you're not using LAMP, your configuration will likely look different:
 
 ```
-<VirtualHost develgame.local:80>
+<VirtualHost mvc_local.local:80>
         ServerAdmin webmaster@localhost
         DocumentRoot /var/www/TemplatedPHPMVC_Demo
 
