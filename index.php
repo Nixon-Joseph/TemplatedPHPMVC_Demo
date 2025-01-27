@@ -3,20 +3,24 @@
  * @author nieminen <nieminen432@gmail.com>
  */
 
+use devpirates\MVC\Interfaces\LogLevels;
+
+try {
 //$start = microtime(true);
 require './vendor/autoload.php';
-//$app = new devpirates\MVC\TemplateMVCApp("./app/cache");  // enable caching
-$app = new devpirates\MVC\TemplateMVCApp();
+$app = new devpirates\MVC\TemplateMVCApp("haml");
 
-$app->Autoload("./app/controllers", array("./app/models", "./app/helpers", "./app/repos"));
+$app->Autoload("./app/controllers", array("./app/classes", "./app/models", "./app/helpers", "./app/repos"));
+$logger = new HTMLCommentLogger();
+$logger->SetMinLevel(LogLevels::TRACE);
+$app->SetLogger($logger);
 
 // private creds file, sets $dbServer, $dbName, $dbUser, and $dbPass variables
 require "../private/mvc_db_creds.php";
 // configure the templated mvc app db access
 $app->Config($dbServer, $dbName, $dbUser, $dbPass);
 unset ($dbServer, $dbName, $dbUser, $dbPass); // unset variables so they can't be accessed again
-// configure the templated mvc app without db access
-//$app->ConfigSession();
+$app->ConfigSession("DEMOSESSION");
 
 
 require "./app/classes/Constants.php";
@@ -33,4 +37,7 @@ $siteData["PageTitle"] = Constants::SITE_NAME;
 // starts the mvc process. Passing in view directory, name of 404 controller, and default site data replacer values
 $app->Start("./app/views", "FileNotFoundController", $siteData);
 //echo 'Render took ' . number_format(microtime(true) - $start, 3) . ' seconds.';
+} catch (Exception $e) {
+    echo "MVC ERROR: " . $e->getMessage();
+}
 ?>

@@ -1,4 +1,8 @@
 <?php
+
+use devpirates\MVC\Base\ControllerResponse;
+use devpirates\MVC\HttpStatusCode;
+
 trait AuthorizedApiController {
     use AuthorizedController;
 
@@ -9,22 +13,28 @@ trait AuthorizedApiController {
      * @param callable $action
      * @param any|null $callableParams
      * @param array|null $roles
-     * @return void
+     * @return ControllerResponse | null
      */
-    protected function authorize(callable $action, $callableParams = null, ?array $roles = null): void {
+    protected function authorize(callable $action, $callableParams = null, ?array $roles = null): ?ControllerResponse {
         if ($this->isLoggedIn() === true) {
             if (isset($roles) === false || $roles === null || sizeof($roles) === 0) {
                 if (isset($callableParams)) {
-                    $action($callableParams);
+                    return $action($callableParams);
                 } else {
-                    $action();
+                    return $action();
                 }
-                return;
             } else {
-                $userId = $this->getCurrentUserid();
+                // $userId = $this->getCurrentUserid();
                 // $roleHelper = new RoleHelper();
                 // get roles for user
                 // if user is in any of the passed in roles, run action, and return
+                if (true) {
+                    if (isset($callableParams)) {
+                        return $action($callableParams);
+                    } else {
+                        return $action();
+                    }
+                }
             }
         }
         http_response_code(HttpStatusCode::UNAUTHORIZED);

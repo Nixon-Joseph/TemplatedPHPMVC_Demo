@@ -4,32 +4,32 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7addd8cc6f0dc244a10b2fe034473ddb",
+    "content-hash": "998f72d8c93f5485a48b899444621e79",
     "packages": [
         {
             "name": "devpirates/templated-php-mvc",
-            "version": "0.1.15",
+            "version": "0.2.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Nixon-Joseph/TemplatedPHPMVC.git",
-                "reference": "7311dbdd11bc46ee8ecea9d2dd7bce9aa750d76e"
+                "reference": "cbec416887cf48e48a83d109d0ba9a27091d5ae9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nixon-Joseph/TemplatedPHPMVC/zipball/7311dbdd11bc46ee8ecea9d2dd7bce9aa750d76e",
-                "reference": "7311dbdd11bc46ee8ecea9d2dd7bce9aa750d76e",
+                "url": "https://api.github.com/repos/Nixon-Joseph/TemplatedPHPMVC/zipball/cbec416887cf48e48a83d109d0ba9a27091d5ae9",
+                "reference": "cbec416887cf48e48a83d109d0ba9a27091d5ae9",
                 "shasum": ""
             },
             "require": {
                 "liquid/liquid": "^1.4",
-                "netresearch/jsonmapper": "^4.0",
-                "pelago/emogrifier": "^5.0"
+                "netresearch/jsonmapper": "^4.4"
             },
             "type": "library",
             "autoload": {
                 "psr-4": {
                     "devpirates\\MVC\\": "src/",
-                    "devpirates\\MVC\\Base\\": "src/abstract/"
+                    "devpirates\\MVC\\Base\\": "src/abstract/",
+                    "devpirates\\MVC\\Interfaces\\": "src/interfaces/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -49,30 +49,30 @@
             "description": "Library to help people quickly build and maintain an mvc project in php with lots of helpful built in tools and utilities",
             "support": {
                 "issues": "https://github.com/Nixon-Joseph/TemplatedPHPMVC/issues",
-                "source": "https://github.com/Nixon-Joseph/TemplatedPHPMVC/tree/0.1.15"
+                "source": "https://github.com/Nixon-Joseph/TemplatedPHPMVC/tree/0.2.6"
             },
-            "time": "2021-03-30T01:38:28+00:00"
+            "time": "2025-01-27T16:34:28+00:00"
         },
         {
             "name": "liquid/liquid",
-            "version": "1.4.22",
+            "version": "1.4.43",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kalimatas/php-liquid.git",
-                "reference": "d3e9c3de5b8a17840af2a29ac39cfe3afac55282"
+                "reference": "3a472d5a87fd40c075eea2c4afec5028564e00c1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kalimatas/php-liquid/zipball/d3e9c3de5b8a17840af2a29ac39cfe3afac55282",
-                "reference": "d3e9c3de5b8a17840af2a29ac39cfe3afac55282",
+                "url": "https://api.github.com/repos/kalimatas/php-liquid/zipball/3a472d5a87fd40c075eea2c4afec5028564e00c1",
+                "reference": "3a472d5a87fd40c075eea2c4afec5028564e00c1",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.3 || ^8.0"
+                "php": "^7.4 || ^8.0"
             },
             "require-dev": {
-                "ergebnis/composer-normalize": "^2.8",
-                "friendsofphp/php-cs-fixer": "^2.16.4",
+                "ergebnis/composer-normalize": ">=2.8",
+                "friendsofphp/php-cs-fixer": "^3.22",
                 "infection/infection": ">=0.17.6",
                 "php-coveralls/php-coveralls": "^2.2",
                 "phpunit/phpunit": "^9.2.6"
@@ -118,22 +118,22 @@
             ],
             "support": {
                 "issues": "https://github.com/kalimatas/php-liquid/issues",
-                "source": "https://github.com/kalimatas/php-liquid/tree/1.4.22"
+                "source": "https://github.com/kalimatas/php-liquid/tree/1.4.43"
             },
-            "time": "2021-01-22T14:14:26+00:00"
+            "time": "2024-10-04T06:14:41+00:00"
         },
         {
             "name": "netresearch/jsonmapper",
-            "version": "v4.0.0",
+            "version": "v4.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cweiske/jsonmapper.git",
-                "reference": "8bbc021a8edb2e4a7ea2f8ad4fa9ec9dce2fcb8d"
+                "reference": "8e76efb98ee8b6afc54687045e1b8dba55ac76e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cweiske/jsonmapper/zipball/8bbc021a8edb2e4a7ea2f8ad4fa9ec9dce2fcb8d",
-                "reference": "8bbc021a8edb2e4a7ea2f8ad4fa9ec9dce2fcb8d",
+                "url": "https://api.github.com/repos/cweiske/jsonmapper/zipball/8e76efb98ee8b6afc54687045e1b8dba55ac76e5",
+                "reference": "8e76efb98ee8b6afc54687045e1b8dba55ac76e5",
                 "shasum": ""
             },
             "require": {
@@ -144,7 +144,7 @@
                 "php": ">=7.1"
             },
             "require-dev": {
-                "phpunit/phpunit": "~7.5 || ~8.0 || ~9.0",
+                "phpunit/phpunit": "~7.5 || ~8.0 || ~9.0 || ~10.0",
                 "squizlabs/php_codesniffer": "~3.5"
             },
             "type": "library",
@@ -169,44 +169,40 @@
             "support": {
                 "email": "cweiske@cweiske.de",
                 "issues": "https://github.com/cweiske/jsonmapper/issues",
-                "source": "https://github.com/cweiske/jsonmapper/tree/v4.0.0"
+                "source": "https://github.com/cweiske/jsonmapper/tree/v4.5.0"
             },
-            "time": "2020-12-01T19:48:11+00:00"
+            "time": "2024-09-08T10:13:13+00:00"
         },
         {
-            "name": "pelago/emogrifier",
-            "version": "v5.0.0",
+            "name": "sonata-project/google-authenticator",
+            "version": "2.3.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/MyIntervals/emogrifier.git",
-                "reference": "b43b650880d189b0ada61d95d0729c7424b1752d"
+                "url": "https://github.com/sonata-project/GoogleAuthenticator.git",
+                "reference": "71a4189228f93a9662574dc8c65e77ef55061b59"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MyIntervals/emogrifier/zipball/b43b650880d189b0ada61d95d0729c7424b1752d",
-                "reference": "b43b650880d189b0ada61d95d0729c7424b1752d",
+                "url": "https://api.github.com/repos/sonata-project/GoogleAuthenticator/zipball/71a4189228f93a9662574dc8c65e77ef55061b59",
+                "reference": "71a4189228f93a9662574dc8c65e77ef55061b59",
                 "shasum": ""
             },
             "require": {
-                "ext-dom": "*",
-                "ext-libxml": "*",
-                "php": "~7.1.0 || ~7.2.0 || ~7.3.0 || ~7.4.0 || ~8.0.0",
-                "symfony/css-selector": "^3.4.32 || ^4.4 || ^5.1"
+                "php": "^7.3 || ^8.0"
             },
             "require-dev": {
-                "php-parallel-lint/php-parallel-lint": "^1.2.0",
-                "slevomat/coding-standard": "^6.4.1",
-                "squizlabs/php_codesniffer": "^3.5.8"
+                "symfony/phpunit-bridge": "^5.1.8"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "5.0.x-dev"
+                    "dev-master": "2.x-dev"
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "Pelago\\Emogrifier\\": "src/"
+                    "Google\\Authenticator\\": "src/",
+                    "Sonata\\GoogleAuthenticator\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -215,105 +211,47 @@
             ],
             "authors": [
                 {
-                    "name": "Oliver Klee",
-                    "email": "github@oliverklee.de"
+                    "name": "Thomas Rabaix",
+                    "email": "thomas.rabaix@gmail.com"
                 },
                 {
-                    "name": "Zoli Szabó",
-                    "email": "zoli.szabo+github@gmail.com"
+                    "name": "Christian Stocker",
+                    "email": "me@chregu.tv"
                 },
                 {
-                    "name": "John Reeve",
-                    "email": "jreeve@pelagodesign.com"
-                },
-                {
-                    "name": "Jake Hotson",
-                    "email": "jake@qzdesign.co.uk"
-                },
-                {
-                    "name": "Cameron Brooks"
-                },
-                {
-                    "name": "Jaime Prado"
+                    "name": "Andre DeMarre",
+                    "homepage": "http://www.devnetwork.net/viewtopic.php?f=50&t=94989"
                 }
             ],
-            "description": "Converts CSS styles into inline style attributes in your HTML code",
-            "homepage": "https://www.myintervals.com/emogrifier.php",
+            "description": "Library to integrate Google Authenticator into a PHP project",
+            "homepage": "https://github.com/sonata-project/GoogleAuthenticator",
             "keywords": [
-                "css",
-                "email",
-                "pre-processing"
+                "google authenticator"
             ],
             "support": {
-                "issues": "https://github.com/MyIntervals/emogrifier/issues",
-                "source": "https://github.com/MyIntervals/emogrifier"
-            },
-            "time": "2020-11-23T18:37:25+00:00"
-        },
-        {
-            "name": "symfony/css-selector",
-            "version": "v5.2.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/css-selector.git",
-                "reference": "f65f217b3314504a1ec99c2d6ef69016bb13490f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/css-selector/zipball/f65f217b3314504a1ec99c2d6ef69016bb13490f",
-                "reference": "f65f217b3314504a1ec99c2d6ef69016bb13490f",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.2.5"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\CssSelector\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Jean-François Simon",
-                    "email": "jeanfrancois.simon@sensiolabs.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Converts CSS selectors to XPath expressions",
-            "homepage": "https://symfony.com",
-            "support": {
-                "source": "https://github.com/symfony/css-selector/tree/v5.2.4"
+                "issues": "https://github.com/sonata-project/GoogleAuthenticator/issues",
+                "source": "https://github.com/sonata-project/GoogleAuthenticator/tree/2.3.1"
             },
             "funding": [
                 {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
+                    "url": "https://github.com/OskarStark",
                     "type": "github"
                 },
                 {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
+                    "url": "https://github.com/VincentLanglet",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/core23",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/wbloszyk",
+                    "type": "github"
                 }
             ],
-            "time": "2021-01-27T10:01:46+00:00"
+            "abandoned": true,
+            "time": "2021-02-15T19:23:18+00:00"
         }
     ],
     "packages-dev": [],
@@ -324,5 +262,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.6.0"
 }

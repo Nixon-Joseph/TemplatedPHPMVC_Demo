@@ -1,5 +1,13 @@
 <?php
-class AuthenticationHelper {
+
+use devpirates\MVC\Base\Helper;
+use devpirates\MVC\TemplateMVCApp;
+
+class AuthenticationHelper extends Helper {
+    public function __construct(TemplateMVCApp $app) {
+        parent::__construct($app);
+    }
+
     public static function IsLoggedIn(): bool {
         return isset($_SESSION['authenticated']) && strlen($_SESSION['authenticated']) > 0;
     }

@@ -1,7 +1,11 @@
 <?php
+
+use devpirates\MVC\ResponseInfo;
+use devpirates\MVC\TemplateMVCApp;
+
 class UserRepo extends \devpirates\MVC\Base\Repo {
-    public function __construct() {
-        parent::__construct("User");
+    public function __construct(TemplateMVCApp $app) {
+        parent::__construct($app, "User");
     }
 
     public function GetAllUsers() : array {
@@ -71,6 +75,8 @@ class UserRepo extends \devpirates\MVC\Base\Repo {
 }
 
 class User {
+    public function __construct() {}
+
     /**
      * User Identifier
      *

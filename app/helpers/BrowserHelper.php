@@ -1,5 +1,13 @@
 <?php
-class BrowserHelper {
+
+use devpirates\MVC\Base\Helper;
+use devpirates\MVC\TemplateMVCApp;
+
+class BrowserHelper extends Helper {
+    public function __construct(TemplateMVCApp $app) {
+        parent::__construct($app);
+    }
+
     /**
      * Returns an array of browser information
      *

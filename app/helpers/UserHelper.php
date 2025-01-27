@@ -1,4 +1,10 @@
 <?php
+
+use devpirates\MVC\Authentication;
+use devpirates\MVC\GUIDHelper;
+use devpirates\MVC\ResponseInfo;
+use devpirates\MVC\TemplateMVCApp;
+
 class UserHelper extends \devpirates\MVC\Base\Helper {
     /**
      * @var UserRepo
@@ -8,7 +14,7 @@ class UserHelper extends \devpirates\MVC\Base\Helper {
     /**
      * Regex for email addresses
      *
-     * @var Regex
+     * @var string
      */
     private $emailRegex = '/^(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){255,})(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){65,}@)(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F]|(?:\x5C[\x00-\x7F]))*\x22))(?:\.(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F]|(?:\x5C[\x00-\x7F]))*\x22)))*@(?:(?:(?!.*[^.]{64,})(?:(?:(?:xn--)?[a-z0-9]+(?:-[a-z0-9]+)*\.){1,126}){1,}(?:(?:[a-z][a-z0-9]*)|(?:(?:xn--)[a-z0-9]+))(?:-[a-z0-9]+)*)|(?:\[(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9][:\]]){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?)))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))\]))$/iD';
     /**
@@ -18,68 +24,69 @@ class UserHelper extends \devpirates\MVC\Base\Helper {
      */
     private $invalidUsernameRegex = '/[\W]/';
 
-    public function __construct() {
-        $this->repo = new UserRepo();
+    public function __construct(TemplateMVCApp $app) {
+        parent::__construct($app);
+        $this->repo = new UserRepo($app);
     }
 
     public function BeginResetPassword(): void {
-        $email = REQUEST_GET['email'];
-        if ($this->UserEmailExists($email) === true) {
-            $user = $this->GetUserByEmail($email);
-            if (isset($user)) {
-                $requestHelper = new PasswordResetRequestHelper();
-                $requestResponse = $requestHelper->CreateRequest($user->Uid);
-                if ($requestResponse->Success === true) {
-                    LogHelper::WriteLog("Reset Password requested for $email", LogTypes::EMAIL);
-                    $url = Constants::SITE_ADDRESS . "/account/resetpassword?code=" . $requestResponse->Message;
-                    $emailContents = EmailHelper::BuildEmail(Files::OpenFile("./app/emails/PasswordReset.html"), array(
-                        'name' => $user->Username,
-                        'action_url' => $url
-                    ));
-                    $emailSuccess = EmailHelper::SendEmail($emailContents, "New Password Reset Request", $email, Constants::FROM_EMAIL, true);
-                }
-            }
-        } else {
-            LogHelper::WriteLog("Reset Password requested for unkown email: $email", LogTypes::EMAIL);
-        }
+        // $email = REQUEST_GET['email'];
+        // if ($this->UserEmailExists($email) === true) {
+        //     $user = $this->GetUserByEmail($email);
+        //     if (isset($user)) {
+        //         $requestHelper = new PasswordResetRequestHelper();
+        //         $requestResponse = $requestHelper->CreateRequest($user->Uid);
+        //         if ($requestResponse->Success === true) {
+        //             LogHelper::WriteLog("Reset Password requested for $email", LogTypes::EMAIL);
+        //             $url = Constants::SITE_ADDRESS . "/account/resetpassword?code=" . $requestResponse->Message;
+        //             $emailContents = EmailHelper::BuildEmail(Files::OpenFile("./app/emails/PasswordReset.html"), array(
+        //                 'name' => $user->Username,
+        //                 'action_url' => $url
+        //             ));
+        //             $emailSuccess = EmailHelper::SendEmail($emailContents, "New Password Reset Request", $email, Constants::FROM_EMAIL, true);
+        //         }
+        //     }
+        // } else {
+        //     LogHelper::WriteLog("Reset Password requested for unkown email: $email", LogTypes::EMAIL);
+        // }
     }
 
     public function ResetPassword(): ResponseInfo {
         $response = ResponseInfo::Error("Could not find referenced password reset request.");
         if (isset(REQUEST_POST['code'])) {
             $code = REQUEST_POST['code'];
-            $requestHelper = new PasswordResetRequestHelper();
-            $request = $requestHelper->GetRequest($code);
-            if (isset($request)) {
-                $email = REQUEST_POST['email'];
-                $user = $this->GetUserByEmail($email);
-                if (isset($user)) {
-                    if (time() - strtotime($request->Date) > (60 * 60 * 24)) { // 24 hours
-                        $response->Message = "This password reset link has expired. Please generate a new one, and try again.";
-                    } else {
-                        if ($request->User === $user->Uid) {
-                            $newPassword = REQUEST_POST['password'];
-                            if (isset($newPassword)) {
-                                $newPasswordInfo = Authentication::GenerateHashAndSalt($newPassword);
-                                $user->PasswordHash = $newPasswordInfo['hash'];
-                                $user->PasswordSalt = $newPasswordInfo['salt'];
-                                $userUpdateResponse = $this->UpsertUser($user);
-                                if ($userUpdateResponse->Success === true) {
-                                    try {
-                                        $requestHelper->DeleteRequest($request->Uid);
-                                    } catch (\Throwable $th) { }
-                                    $response->Success = true;
-                                    $response->Message = null;
-                                } else {
-                                    $response->Message = "Could not update your password. Please try again, or contact us for assistance.";
-                                }
-                            }
-                        } else {
-                            $response->Message = "Could not find reset request for user with email: $email";
-                        }
-                    }
-                }
-            }
+            // $requestHelper = new PasswordResetRequestHelper();
+            // $request = $requestHelper->GetRequest($code);
+            // if (isset($request)) {
+            //     $email = REQUEST_POST['email'];
+            //     $user = $this->GetUserByEmail($email);
+            //     if (isset($user)) {
+            //         if (time() - strtotime($request->Date) > (60 * 60 * 24)) { // 24 hours
+            //             $response->Message = "This password reset link has expired. Please generate a new one, and try again.";
+            //         } else {
+            //             if ($request->User === $user->Uid) {
+            //                 $newPassword = REQUEST_POST['password'];
+            //                 if (isset($newPassword)) {
+            //                     $newPasswordInfo = Authentication::GenerateHashAndSalt($newPassword);
+            //                     $user->PasswordHash = $newPasswordInfo['hash'];
+            //                     $user->PasswordSalt = $newPasswordInfo['salt'];
+            //                     $userUpdateResponse = $this->UpsertUser($user);
+            //                     if ($userUpdateResponse->Success === true) {
+            //                         try {
+            //                             $requestHelper->DeleteRequest($request->Uid);
+            //                         } catch (\Throwable $th) { }
+            //                         $response->Success = true;
+            //                         $response->Message = null;
+            //                     } else {
+            //                         $response->Message = "Could not update your password. Please try again, or contact us for assistance.";
+            //                     }
+            //                 }
+            //             } else {
+            //                 $response->Message = "Could not find reset request for user with email: $email";
+            //             }
+            //         }
+            //     }
+            // }
         }
         return $response;
     }
@@ -103,14 +110,14 @@ class UserHelper extends \devpirates\MVC\Base\Helper {
                         $response->Success = true;
                         //LogHelper::WriteLog("Reset Password requested for $email", LogTypes::EMAIL);
                         $url = Constants::SITE_ADDRESS . "/account/create?code=" . $user->Username;
-                        $emailContents = EmailHelper::BuildEmail(Files::OpenFile("./app/emails/NewAccount_Pre.html"), array('action_url' => $url));
-                        $emailSuccess = EmailHelper::SendEmail($emailContents, "New Account Request", $email, Constants::FROM_EMAIL, true);
+                        // $emailContents = EmailHelper::BuildEmail(Files::OpenFile("./app/emails/NewAccount_Pre.html"), array('action_url' => $url));
+                        // $emailSuccess = EmailHelper::SendEmail($emailContents, "New Account Request", $email, Constants::FROM_EMAIL, true);
                         // if email succeeds
-                        if ($emailSuccess === true) {
-                            $response->Message = "";
-                        } else {
-                            $response->Message = "Initial registration successful, but we could not send the registration email. Please contact us for assistance.";
-                        }
+                        // if ($emailSuccess === true) {
+                        //     $response->Message = "";
+                        // } else {
+                        //     $response->Message = "Initial registration successful, but we could not send the registration email. Please contact us for assistance.";
+                        // }
                     } else {
                         $response->Message = "Unable to register the provided email. If this issue persists, please contact us for assitance.";
                     }
@@ -146,11 +153,11 @@ class UserHelper extends \devpirates\MVC\Base\Helper {
                                     if ($userUpdateResponse->Success === true) {
                                         $response->Success = true;
                                         $response->Message = null;
-                                        $emailContents = EmailHelper::BuildEmail(Files::OpenFile("./app/emails/NewAccount.html"), array(
-                                            'name' => $username,
-                                            'action_url' => Constants::SITE_ADDRESS . "/account/login"
-                                        ));
-                                        $emailSuccess = EmailHelper::SendEmail($emailContents, "Welcome to " . Constants::SITE_NAME_CLEAN, $email, Constants::FROM_EMAIL, true);
+                                        // $emailContents = EmailHelper::BuildEmail(Files::OpenFile("./app/emails/NewAccount.html"), array(
+                                        //     'name' => $username,
+                                        //     'action_url' => Constants::SITE_ADDRESS . "/account/login"
+                                        // ));
+                                        // $emailSuccess = EmailHelper::SendEmail($emailContents, "Welcome to " . Constants::SITE_NAME_CLEAN, $email, Constants::FROM_EMAIL, true);
                                     } else {
                                         $response->Message = "Could not finish setting up your profile. Please try again, or contact us for assistance.";
                                     }

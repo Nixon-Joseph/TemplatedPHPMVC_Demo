@@ -1,4 +1,11 @@
 <?php
+
+use devpirates\MVC\Authentication;
+use devpirates\MVC\Base\ControllerResponse;
+use devpirates\MVC\GUIDHelper;
+use devpirates\MVC\ResponseInfo;
+use devpirates\MVC\TemplateMVCApp;
+
 class AccountApiController extends \devpirates\MVC\Base\ApiController {
     use AuthorizedApiController;
 
@@ -7,10 +14,10 @@ class AccountApiController extends \devpirates\MVC\Base\ApiController {
      */
     private $helper;
 
-    public function __construct() {
+    public function __construct(TemplateMVCApp $app) {
+        parent::__construct($app);
         $this->_init();
-        $this->helper = new UserHelper();
-        parent::__construct();
+        $this->helper = new UserHelper($app);
     }
 
     /**
@@ -18,11 +25,11 @@ class AccountApiController extends \devpirates\MVC\Base\ApiController {
      *
      * @return void
      */
-    public function Index(): void {
+    public function Index(): ControllerResponse {
         if ($this->isLoggedIn() === true) {
-            $this->respond(array("IsLoggedIn" => true, "Username" => $this->getCurrentUsername()));
+            return $this->ok(array("IsLoggedIn" => true, "Username" => $this->getCurrentUsername()));
         } else {
-            $this->respond(array("IsLoggedIn" => false));
+            return $this->ok(array("IsLoggedIn" => false));
         }
     }
 
@@ -32,10 +39,10 @@ class AccountApiController extends \devpirates\MVC\Base\ApiController {
      *
      * @return void
      */
-    public function Info(): void {
-        $this->authorize(function() {
+    public function Info(): ControllerResponse {
+        return $this->authorize(function() {
             $user = $this->getCurrentUser();
-            $this->respond(array(
+            return $this->ok(array(
                 "Username" => $user->Username,
                 "Email" => $user->Email,
                 "Require2FA" => $user->Require2FA
@@ -48,7 +55,7 @@ class AccountApiController extends \devpirates\MVC\Base\ApiController {
      *
      * @return void
      */
-    public function Login(): void {
+    public function Login(): ControllerResponse {
         $errorMessage = "Username and password are required.";
         if (isset(REQUEST_POST['payload']) && strlen(REQUEST_POST['payload'])) {
             $errorMessage = "Username or password provided could not be validated.";
@@ -61,26 +68,25 @@ class AccountApiController extends \devpirates\MVC\Base\ApiController {
                             $twoFactorRequest = GUIDHelper::GUIDv4();
                             $_SESSION[Constants::TWO_FACTOR_SESSION] = $twoFactorRequest;
                             $_SESSION[$twoFactorRequest] = base64_encode($user->Username);
-                            $this->respond(ResponseInfo::Success("2FA", $twoFactorRequest));
+                            return $this->ok(ResponseInfo::Success("2FA", $twoFactorRequest));
                         } else {
                             $this->setCurrentUser($user);
-                            $this->respond(ResponseInfo::Success());
+                            return $this->ok(ResponseInfo::Success());
                         }
-                        return;
                     }
                 }
             }
         }
-        $this->respond(ResponseInfo::Error($errorMessage));
+        return $this->ok(ResponseInfo::Error($errorMessage));
     }
 
     /**
      * Second step in login via 2FA, compares code provided with the secret stored on the user
      *
-     * @return void
+     * @return ControllerResponse
      */
-    public function Login2FA(): void {
-        $this->throttle("2FA", 5, 1, function() {
+    public function Login2FA(): ControllerResponse {
+        return $this->throttle("2FA", 5, 1, function() {
             if (isset(REQUEST_POST['2fa']) && isset($_SESSION[Constants::TWO_FACTOR_SESSION]) && REQUEST_POST['2fa'] === $_SESSION[Constants::TWO_FACTOR_SESSION]) {
                 if (isset($_SESSION[$_SESSION[Constants::TWO_FACTOR_SESSION]]) && strlen($_SESSION[$_SESSION[Constants::TWO_FACTOR_SESSION]])) {
                     $username = base64_decode($_SESSION[$_SESSION[Constants::TWO_FACTOR_SESSION]]);
@@ -92,20 +98,19 @@ class AccountApiController extends \devpirates\MVC\Base\ApiController {
                             $g = new Sonata\GoogleAuthenticator\GoogleAuthenticator();
                             if ($g->checkCode($user->Secret2FA, REQUEST_POST['code']) === true) {
                                 $_SESSION['authenticated'] = base64_encode($user->Username . '||' . $user->Uid);
-                                $this->respond(ResponseInfo::Success());
+                                return $this->ok(ResponseInfo::Success());
                             } else {
                                 $twoFactorRequest = GUIDHelper::GUIDv4();
                                 $_SESSION[Constants::TWO_FACTOR_SESSION] = $twoFactorRequest;
                                 $_SESSION[$twoFactorRequest] = base64_encode($user->Username);
                                 $response = new ResponseInfo(false, $twoFactorRequest, "Code could not be verified.");
-                                $this->respond($response);
+                                return $this->ok($response);
                             }
-                            return;
                         }
                     }
                 }
             }
-            $this->respond(ResponseInfo::Error("Failed to authenticate provided code."));
+            return $this->ok(ResponseInfo::Error("Failed to authenticate provided code."));
         });
     }
 
@@ -113,15 +118,15 @@ class AccountApiController extends \devpirates\MVC\Base\ApiController {
      * First step to 2 factor setup for an account
      * Returns data required to set up 2 factor via the authenticator app
      *
-     * @return void
+     * @return ControllerResponse
      */
-    public function Get2FactorSetup(): void {
-        $this->authorize(function() {
+    public function Get2FactorSetup(): ControllerResponse {
+        return $this->authorize(function() {
             $username = $this->getCurrentUsername();
             $g = new Sonata\GoogleAuthenticator\GoogleAuthenticator();
             $secret = $g->generateSecret();
             $_SESSION["2FASetupSecret"] = $secret;
-            $this->respond(ResponseInfo::Success(null, Sonata\GoogleAuthenticator\GoogleQrUrl::generate($username, $secret, CONSTANTS::SITE_NAME_CLEAN)));
+            return $this->ok(ResponseInfo::Success(null, Sonata\GoogleAuthenticator\GoogleQrUrl::generate($username, $secret, CONSTANTS::SITE_NAME_CLEAN)));
         });
     }
 
@@ -130,10 +135,10 @@ class AccountApiController extends \devpirates\MVC\Base\ApiController {
      * Takes the $code provided from the authenticator app to authenticate the setup
      *
      * @param string $code
-     * @return void
+     * @return ControllerResponse
      */
-    public function Enable2FactorSetup(string $code): void {
-        $this->authorize(function($c) {
+    public function Enable2FactorSetup(string $code): ControllerResponse {
+        return $this->authorize(function($c) {
             if (isset($_SESSION["2FASetupSecret"])) {
                 $secret = $_SESSION["2FASetupSecret"];
                 $g = new Sonata\GoogleAuthenticator\GoogleAuthenticator();
@@ -144,15 +149,15 @@ class AccountApiController extends \devpirates\MVC\Base\ApiController {
                     $response = $this->helper->UpsertUser($user);
                     if ($response->Success === true) {
                         unset($_SESSION["2FASetupSecret"]);
-                        $this->respond(ResponseInfo::Success());
+                        return $this->ok(ResponseInfo::Success());
                     } else {
-                        $this->respond(ResponseInfo::Error("Unable to update your user account. Please try again, or contact us for assistance."));
+                        return $this->ok(ResponseInfo::Error("Unable to update your user account. Please try again, or contact us for assistance."));
                     }
                 } else {
-                    $this->respond(ResponseInfo::Error("Invalid code, please try again."));
+                    return $this->ok(ResponseInfo::Error("Invalid code, please try again."));
                 }
             } else {
-                $this->respond(ResponseInfo::Error("Unable to verify 2 Factor request. Please start over."));
+                return $this->ok(ResponseInfo::Error("Unable to verify 2 Factor request. Please start over."));
             }
         }, $code);
     }
@@ -160,10 +165,10 @@ class AccountApiController extends \devpirates\MVC\Base\ApiController {
     /**
      * Disables 2 factor for the current account if the password provided matches
      *
-     * @return void
+     * @return ControllerResponse
      */
-    public function Disable2Factor(): void {
-        $this->authorize(function() {
+    public function Disable2Factor(): ControllerResponse {
+        return $this->authorize(function() {
             if (isset(REQUEST_POST["password"])) {
                 $password = REQUEST_POST["password"];
                 $user = $this->getCurrentUser();
@@ -172,15 +177,15 @@ class AccountApiController extends \devpirates\MVC\Base\ApiController {
                     $user->Require2FA = false;
                     $response = $this->helper->UpsertUser($user);
                     if ($response->Success === true) {
-                        $this->respond(ResponseInfo::Success());
+                        return $this->ok(ResponseInfo::Success());
                     } else {
-                        $this->respond(ResponseInfo::Error("Unable to update your user account. Please try again, or contact us for assistance."));
+                        return $this->ok(ResponseInfo::Error("Unable to update your user account. Please try again, or contact us for assistance."));
                     }
                 } else {
-                    $this->respond(ResponseInfo::Error("Invalid password, please try again."));
+                    return $this->ok(ResponseInfo::Error("Invalid password, please try again."));
                 }
             } else {
-                $this->respond(ResponseInfo::Error("Password is required."));
+                return $this->ok(ResponseInfo::Error("Password is required."));
             }
         });
     }
@@ -188,20 +193,20 @@ class AccountApiController extends \devpirates\MVC\Base\ApiController {
     /**
      * Verifies if the provided password is correct for the currently logged in user.
      *
-     * @return void
+     * @return ControllerResponse
      */
-    public function VerifyPassword(): void {
-        $this->authorize(function() {
+    public function VerifyPassword(): ControllerResponse {
+        return $this->authorize(function() {
             if (isset(REQUEST_POST["password"])) {
                 $password = REQUEST_POST["password"];
                 $user = $this->getCurrentUser();
                 if (Authentication::CheckPassword($password, $user->PasswordSalt, $user->PasswordHash)) {
-                    $this->respond(ResponseInfo::Success());
+                    return $this->ok(ResponseInfo::Success());
                 } else {
-                    $this->respond(ResponseInfo::Error("Invalid password, please try again."));
+                    return $this->ok(ResponseInfo::Error("Invalid password, please try again."));
                 }
             } else {
-                $this->respond(ResponseInfo::Error("Password is required."));
+                return $this->ok(ResponseInfo::Error("Password is required."));
             }
         });
     }
@@ -209,45 +214,45 @@ class AccountApiController extends \devpirates\MVC\Base\ApiController {
     /**
      * Sends the forgot password email to the provided email address
      *
-     * @return void
+     * @return ControllerResponse
      */
-    public function BeginResetPassword(): void {
-        $this->throttle("BeginResetPassword", 1, 1, function() {
+    public function BeginResetPassword(): ControllerResponse {
+        return $this->throttle("BeginResetPassword", 1, 1, function() {
             $this->helper->BeginResetPassword();
-            $this->respond(ResponseInfo::Success());
+            return $this->ok(ResponseInfo::Success());
         });
     }
 
     /**
      * Finalizes the account password reset
      *
-     * @return void
+     * @return ControllerResponse
      */
-    public function ResetPassword(): void {
-        $this->throttle("ResetPassword", 2, 5, function() {
-            $this->respond($this->helper->ResetPassword());
+    public function ResetPassword(): ControllerResponse {
+        return $this->throttle("ResetPassword", 2, 5, function() {
+            return $this->ok($this->helper->ResetPassword());
         });
     }
 
     /**
      * Instantiates intitial user account, and sends registration email to new user
      *
-     * @return void
+     * @return ControllerResponse
      */
-    public function BeginRegister(): void {
-        $this->throttle("BeginRegister", 2, 1, function() {
-            $this->respond($this->helper->BeginRegister());
+    public function BeginRegister(): ControllerResponse {
+        return $this->throttle("BeginRegister", 2, 1, function() {
+            return $this->ok($this->helper->BeginRegister());
         });
     }
 
     /**
      * Final registration step
      *
-     * @return void
+     * @return ControllerResponse
      */
-    public function FinishRegister(): void {
-        $this->throttle("FinishRegister", 5, 1, function() {
-            $this->respond($this->helper->FinishRegister());
+    public function FinishRegister(): ControllerResponse {
+        return $this->throttle("FinishRegister", 5, 1, function() {
+            return $this->ok($this->helper->FinishRegister());
         });
     }
 }

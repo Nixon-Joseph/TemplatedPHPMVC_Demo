@@ -9,6 +9,7 @@
         }
     ],
     "require": {
-        "devpirates/templated-php-mvc": "^0.1.15"
+        "devpirates/templated-php-mvc": "^0.2.6",
+        "sonata-project/google-authenticator": "^2.3"
     }
 }
